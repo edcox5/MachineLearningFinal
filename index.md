@@ -72,6 +72,10 @@ Train model
 
 Our classification tree model uses 52 variables to predict the "classe" of exercise.
 
+``` r
+modFit <- train(classe ~ ., data = training, method = "rpart")
+```
+
     ## Loading required package: rpart
 
 Plot tree
