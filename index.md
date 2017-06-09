@@ -3,7 +3,7 @@ Using Machine Learning to Predict the Manner of Exercise
 
 6 volunteers were outfitted with accelerometers on the belt, arm, forearm, and dumbbell and asked to perform lifts correctly and incorrectly in 5 different ways. The goal of this project is to identify the manner (A-E) in which the exercise was being performed.
 
-We will use a random partition to cross validate a model which uses regression and classification trees to predict outcomes.
+We will build a model using random forests to predict outcomes.
 
 ``` r
 set.seed(10101)
@@ -70,24 +70,24 @@ testing <- testing[,names(training)]
 Train model
 -----------
 
-Our classification tree model uses 52 variables to predict the "classe" of exercise.
+Our random forest model uses 52 variables to predict the "classe" of exercise.
 
 ``` r
-modFit <- train(classe ~ ., data = training, method = "rpart")
+modFit <- train(classe ~ ., data = training, method = "rf", ntree = 4)
 ```
 
-    ## Loading required package: rpart
+    ## Loading required package: randomForest
 
-Plot tree
----------
+    ## randomForest 4.6-12
 
-Here's the plot of the dendrogram produced by the model.
+    ## Type rfNews() to see new features/changes/bug fixes.
 
-``` r
-fancyRpartPlot(modFit$finalModel)
-```
+    ## 
+    ## Attaching package: 'randomForest'
 
-![](index_files/figure-markdown_github/dendrogram-1.png)
+    ## The following object is masked from 'package:ggplot2':
+    ## 
+    ##     margin
 
 Expected out-of-sample error
 ----------------------------
@@ -102,35 +102,35 @@ confusionMatrix(testing$classe, data = predict(modFit, newdata = testing))
     ## 
     ##           Reference
     ## Prediction    A    B    C    D    E
-    ##          A 1503  472  476  430  145
-    ##          B   32  381   27  187  145
-    ##          C  133  286  523  347  276
-    ##          D    0    0    0    0    0
-    ##          E    6    0    0    0  516
+    ##          A 1652   26    5    6    3
+    ##          B   15 1085   23    3    5
+    ##          C    3   18  976   16    2
+    ##          D    1    5   18  934    9
+    ##          E    3    5    4    5 1063
     ## 
     ## Overall Statistics
     ##                                           
-    ##                Accuracy : 0.4967          
-    ##                  95% CI : (0.4838, 0.5095)
+    ##                Accuracy : 0.9703          
+    ##                  95% CI : (0.9656, 0.9745)
     ##     No Information Rate : 0.2845          
-    ##     P-Value [Acc > NIR] : < 2.2e-16       
+    ##     P-Value [Acc > NIR] : <2e-16          
     ##                                           
-    ##                   Kappa : 0.3427          
-    ##  Mcnemar's Test P-Value : NA              
+    ##                   Kappa : 0.9624          
+    ##  Mcnemar's Test P-Value : 0.4353          
     ## 
     ## Statistics by Class:
     ## 
     ##                      Class: A Class: B Class: C Class: D Class: E
-    ## Sensitivity            0.8978  0.33450  0.50975   0.0000  0.47689
-    ## Specificity            0.6383  0.91761  0.78555   1.0000  0.99875
-    ## Pos Pred Value         0.4967  0.49352  0.33419      NaN  0.98851
-    ## Neg Pred Value         0.9402  0.85175  0.88356   0.8362  0.89446
-    ## Prevalence             0.2845  0.19354  0.17434   0.1638  0.18386
-    ## Detection Rate         0.2554  0.06474  0.08887   0.0000  0.08768
-    ## Detection Prevalence   0.5142  0.13118  0.26593   0.0000  0.08870
-    ## Balanced Accuracy      0.7681  0.62606  0.64765   0.5000  0.73782
+    ## Sensitivity            0.9869   0.9526   0.9513   0.9689   0.9824
+    ## Specificity            0.9905   0.9903   0.9920   0.9933   0.9965
+    ## Pos Pred Value         0.9764   0.9593   0.9616   0.9659   0.9843
+    ## Neg Pred Value         0.9948   0.9886   0.9897   0.9939   0.9960
+    ## Prevalence             0.2845   0.1935   0.1743   0.1638   0.1839
+    ## Detection Rate         0.2807   0.1844   0.1658   0.1587   0.1806
+    ## Detection Prevalence   0.2875   0.1922   0.1725   0.1643   0.1835
+    ## Balanced Accuracy      0.9887   0.9714   0.9716   0.9811   0.9895
 
 Conclusions
 -----------
 
-The final model makes predictions using just 4 variables: roll\_belt, pitch\_forearm, magnet\_dumbbell\_y, and roll\_forearm. It predicts the correct classe about 50% of the time but cannot discern a classe of "D".
+The final model predicts the correct classe about 98% of the time.
