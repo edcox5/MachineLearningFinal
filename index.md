@@ -83,7 +83,7 @@ Here's the plot of the dendrogram produced by the model.
 fancyRpartPlot(modFit$finalModel)
 ```
 
-![](final_files/figure-markdown_github/dendrogram-1.png)
+![](index_files/figure-markdown_github/dendrogram-1.png)
 
 Expected out-of-sample error
 ----------------------------
